@@ -6,7 +6,7 @@ with open("economy.json", encoding="UTF-8") as src:
 
 app = Ursina()
 
-#start
+
 update_boxes = dict()
 
 def draw_storage(agent):
