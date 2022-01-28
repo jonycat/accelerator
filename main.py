@@ -5,7 +5,7 @@ with open("economy.json", encoding="UTF-8") as src:
     data = eval(src.read())
 
 app = Ursina()
-
+##
 
 update_boxes = dict()
 
