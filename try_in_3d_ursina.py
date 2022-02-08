@@ -22,6 +22,9 @@ class Enemy(Entity):
                          position = (10,2.5,0),collider = "box")
 
 pickup = Entity(model="sphere", position=(1,.5,3))
+def Screamer():
+    video = 'video.mp4'
+    video_player = Entity(model='quad', parent=camera.ui, scale= (2,1), texture=video)
 
 
 player = FirstPersonController(has_pickup = False)
@@ -33,11 +36,12 @@ Enemy()
 
 def update():
     if not player.has_pickup and distance(player, pickup) < pickup.scale_x :
-        print("pickup")
+
 
         player.has_pickup = True
         pickup.animate_scale(0,duration=.1)
         destroy(pickup,delay=.1)
+        Screamer()
 
 
 
