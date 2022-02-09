@@ -16,6 +16,9 @@ class Ground(Entity):
             position = Vec3(0, 0, 0),
             collider = 'plane')
 
+
+
+
 class Enemy(Entity):
     def __init__(self):
         super().__init__(parent = scene,
@@ -24,22 +27,22 @@ class Enemy(Entity):
                          scale = 5,
                          position = (10,2.5,0),collider = "box")
 
+
+
 pickup = Entity(model="sphere", position=(1,.5,3))
+
+
+def Game_over():
+    Gameover = Entity(model='quad', parent=camera.ui, scale=(2, 1), texture='color')
 
 def Ambient():
     pass
 
 
+
 def Screamer():
-    video = 'video.mp4'
-    video_player = Entity(model='quad', parent=camera.ui, scale= (2,1), texture=video)
-    a = audio.Audio(sound_file_name='sound.mp3', loop=True)
-    loaded_sound = app.loader.loadSfx('sound.mp3')
-    a.clip = loaded_sound
-
-
-
-
+    video_player = Entity(model='quad', parent=camera.ui, scale= (2,1), texture='video.mp4')
+    a = audio.Audio(sound_file_name='sound.mp3', loop=False)
 
 
 
@@ -51,16 +54,16 @@ Enemy()
 
 
 
-
 def update():
 
-    if not player.has_pickup and distance(player, pickup) < pickup.scale_x :
+    if not player.has_pickup and distance(player, pickup) < pickup.scale_x:
 
 
         player.has_pickup = True
         pickup.animate_scale(0,duration=.1)
         destroy(pickup,delay=.1)
         Screamer()
+
 
 
 
