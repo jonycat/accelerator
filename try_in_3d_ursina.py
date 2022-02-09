@@ -51,6 +51,7 @@ Enemy()
 
 
 
+
 def update():
 
     if not player.has_pickup and distance(player, pickup) < pickup.scale_x :
