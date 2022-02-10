@@ -19,7 +19,7 @@ class Ground(Entity):
 
 
 
-class Enemy(Entity):
+class Wall(Entity):
     def __init__(self):
         super().__init__(parent = scene,
                          model = 'cube',
@@ -29,11 +29,16 @@ class Enemy(Entity):
 
 
 
-pickup = Entity(model="sphere", position=(1,.5,3))
+
+enemy = Entity(model="cube", position=(1,.5,3), )
 
 
 def Game_over():
-    Gameover = Entity(model='quad', parent=camera.ui, scale=(2, 1), texture='color')
+    pass
+
+def footsteps():
+    pass
+
 
 def Ambient():
     pass
@@ -50,18 +55,16 @@ def Screamer():
 player = FirstPersonController(has_pickup = False)
 ground = Ground()
 Sky()
-Enemy()
-
+Wall()
+Ambient()
 
 
 def update():
-
-    if not player.has_pickup and distance(player, pickup) < pickup.scale_x:
-
+    if not player.has_pickup and distance(player, enemy) < enemy.scale_x:
 
         player.has_pickup = True
-        pickup.animate_scale(0,duration=.1)
-        destroy(pickup,delay=.1)
+        enemy.animate_scale(0,duration=.1)
+        destroy(enemy,delay=.1)
         Screamer()
 
 
