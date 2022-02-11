@@ -1,4 +1,5 @@
 from ursina.prefabs.first_person_controller import FirstPersonController
+
 from ursina import *
 
 
@@ -30,7 +31,7 @@ class Wall(Entity):
 
 
 
-enemy = Entity(model="cube", position=(1,.5,3), )
+enemy = Entity(model="cube", position=(1,.5,3))
 
 
 def Game_over():
@@ -43,31 +44,39 @@ def footsteps():
 def Ambient():
     pass
 
+def sky():
+    sky_model = Entity(model="quad",rotation_x=270, texture='brick', position=(0,100,0), scale=600)
+
 
 
 def Screamer():
-    video_player = Entity(model='quad', parent=camera.ui, scale= (2,1), texture='video.mp4')
-    a = audio.Audio(sound_file_name='sound.mp3', loop=False)
+    Screamer_video= Entity(model='quad', parent=camera.ui, scale= (2,1), texture='video.mp4')
+    a = audio.Audio(sound_file_name='sound.mp3', loop=True)
 
 
 
 
 player = FirstPersonController(has_pickup = False)
+player.speed = 7
 ground = Ground()
-Sky()
 Wall()
 Ambient()
-
+sky()
 
 def update():
     if not player.has_pickup and distance(player, enemy) < enemy.scale_x:
 
         player.has_pickup = True
-        enemy.animate_scale(0,duration=.1)
-        destroy(enemy,delay=.1)
+        enemy.animate_scale(1,duration=.1)
+        #destroy(enemy,delay=.1)
         Screamer()
 
 
+
+    if held_keys['shift']:
+        player.speed = 15
+    else:
+        player.speed = 7
 
 
 app.run()
