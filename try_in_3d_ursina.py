@@ -6,61 +6,66 @@ from ursina import *
 app = Ursina()
 
 
-Ambient_sound = True
 
 
 
-level = load_model('map')
-t = time.time()
-Entity(model=level, collider=level, collision=True, scale=5, texture='grass')
+
+def map():
+    level = load_model('map')
+    Entity(model=level, collider=level, collision=True, scale=5, texture='grass')
+
+
+
 
 
 enemy = Entity(model="bonnie.obj",texture='texture.png', position=(1,.5,3))
 
 
 def Game_over():
-    pass
+    game_over_screen = Entity(model='quad', parent=camera.ui, scale=(2,1), texture='game_over_alpha.png')
+
 
 def footsteps():
     pass
 
 
 def Ambient():
-    global Ambient_sound
-    if Ambient_sound == True:
-        ambient = audio.Audio(sound_file_name='Ambient.mp3', loop=True)
+    ambient = audio.Audio(sound_file_name='Ambient.mp3', loop=True)
 
 def sky():
-    sky_model = Entity(model="quad",rotation_x=270, texture='brick', position=(0,100,0), scale=600)
+    sky_model = Entity(model="quad",rotation_x=270, texture='night_sky', position=(0,100,0), scale=10000)
 
 
 
 def Screamer():
-
     Screamer_video= Entity(model='quad', parent=camera.ui, scale= (2,1), texture='video.mp4')
-    a = audio.Audio(sound_file_name='sound.mp3', loop=True)
+    a = audio.Audio(sound_file_name='sound.mp3', loop=False)
 
 
-
+screamer_time = 2.3
 player = FirstPersonController()
-player.speed = 7
-#Ambient()
+player.scale = 3
 sky()
+map()
+
+
 
 
 def update():
     if distance(player, enemy) < enemy.scale_x:
-        enemy.animate_scale(1,duration=.1)
         Screamer()
         player.position=(0, 0, 0)
-        Game_over()
+
+        invoke(Game_over, delay=screamer_time)
+        invoke(Ambient, delay=screamer_time)
+
 
 
 
     if held_keys['shift']:
-        player.speed = 15
+        player.speed = 20
     else:
-        player.speed = 7
+        player.speed = 10
 
 
 app.run()
