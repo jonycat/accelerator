@@ -1,6 +1,7 @@
+from ursina import *
 from ursina.prefabs.first_person_controller import FirstPersonController
 
-from ursina import *
+
 
 
 app = Ursina()
@@ -14,15 +15,16 @@ def map():
     level = load_model('map')
     Entity(model=level, collider=level, collision=True, scale=5, texture='grass')
 
+#models
 
-
-
-
+#house
+home_outside = Entity(model="home_outside_model",texture='house_outside_texture', position=(0,0,0),scale=1)
+#enemy
 enemy = Entity(model="bonnie.obj",texture='texture.png', position=(1,.5,3))
 
 
 def Game_over():
-    game_over_screen = Entity(model='quad', parent=camera.ui, scale=(2,1), texture='game_over_alpha.png')
+    game_over_screen = Entity(model='quad', parent=camera.ui, scale=(2,1), texture='Menu')
 
 
 def footsteps():
@@ -45,7 +47,8 @@ def Screamer():
 screamer_time = 2.3
 player = FirstPersonController()
 player.scale = 3
-sky()
+player.jump_height = 0
+Sky()
 map()
 
 
