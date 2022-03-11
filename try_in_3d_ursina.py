@@ -1,6 +1,6 @@
 from ursina import *
 from ursina.prefabs.first_person_controller import FirstPersonController
-
+from time import *
 
 
 
@@ -18,11 +18,28 @@ def map():
 
 #models
 
-#house
-home_outside = Entity(model="home_outside_model",collider="home_outside_model",collision=True,texture='house_outside_texture', position=(100,0,0),scale=1,rotation_y=180,)
+def locations():
+    home_outside = Entity(model="home_outside_model",
+                      collider="home_outside_model",
+                      collision=True,
+                      texture='house_outside_texture',
+                      position=(100,0,0),scale=1,
+                      rotation_y=180)
 
 
+    home_inside = Entity(model="house_inside",
+                     collider="house_inside",
+                     collision=True,
+                     texture='brick',
+                     position=(0,-100,-30),
+                     scale=30,
+                     rotation_y=180)
 
+
+    home_inside_roof = Entity(model='plane',
+                              texture='grass',
+                              position=(0,-89,0),scale=90,
+                              rotation_x=180)
 
 #enemy
 enemy = Entity(model="bonnie.obj",texture='texture.png', position=(1,.5,3))
@@ -30,7 +47,7 @@ enemy = Entity(model="bonnie.obj",texture='texture.png', position=(1,.5,3))
 visible_triggers = True
 
 Trigger_1 = Entity(model="sphere",visible=visible_triggers, scale=10,position=(75,.5,10))
-Trigger_Guys = Entity(model="cube",visible=visible_triggers, scale_z=50,position=(50,.5,10))
+Trigger_Guys = Entity(model="plane",visible=visible_triggers, scale_z=5,position=(50,.5,10))
 
 
 def Game_over():
@@ -53,23 +70,22 @@ def Screamer():
 
 screamer_time = 2.3
 player = FirstPersonController()
+
 player.scale = 3
-player.jump_height = 0
+player.jump_height = 20
 Sky()
 map()
-
+locations()
 
 
 
 def update():
     if distance(player, Trigger_1) < Trigger_1.scale_x:
-        player.position = (0, 0, 0)
+        player.position = (0, -99, 0)
 
     if distance(player, Trigger_Guys) < Trigger_Guys.scale_x:
-        audio.Audio(sound_file_name='sound.mp3', loop=False)
-
-
-
+        audio.Audio(sound_file_name='Trigger_where.mp3', loop=False)
+        Trigger_Guys.position = (0, 100, 0)
 
     if distance(player, enemy) < enemy.scale_x:
         Screamer()
@@ -77,7 +93,9 @@ def update():
 
         invoke(Game_over, delay=screamer_time)
         invoke(Ambient, delay=screamer_time)
-
+    a = 0
+    if a == 0:
+        print(player.position)
 
 
 
