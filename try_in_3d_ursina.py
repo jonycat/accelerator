@@ -48,11 +48,16 @@ y = 0
 z = 0
 scale_z = 5
 
-Screamer_trigger_idol = Entity(model="plane",visible=visible_triggers, scale_z=scale_z,position=(x, y, z))
-Screamer_trigger_amog = Entity(model="plane",visible=visible_triggers, scale_z=scale_z,position=(x, y, z + 20))
-Screamer_trigger_hehe = Entity(model="plane",visible=visible_triggers, scale_z=scale_z,position=(x, y, z + 40))
-Screamer_trigger_micro = Entity(model="plane",visible=visible_triggers, scale_z=scale_z,position=(x, y, z + 60))
+x_idol, y_idol, z_idol = -25.3238, -98.2, -11.0422
+x_amog, y_amog, z_amog = 29.2416, -98.2, 5.07941
+x_hehe, y_hehe, z_hehe = 11.6294, -98.2, -14.7563
+x_micro, y_micro, z_micro = 11.98, -99, 6.95575
 
+
+Screamer_trigger_idol = Entity(model="plane",visible=visible_triggers, scale_z=scale_z,position=(x_idol, y_idol, z_idol))
+Screamer_trigger_amog = Entity(model="plane",visible=visible_triggers, scale_z=scale_z,position=(x_amog, y_amog, z_amog))
+Screamer_trigger_hehe = Entity(model="plane",visible=visible_triggers, scale_z=scale_z,position=(x_hehe, y_hehe, z_hehe))
+Screamer_trigger_micro = Entity(model="plane",visible=visible_triggers, scale_z=scale_z,position=(x_micro, y_micro, z_micro))
 
 
 
@@ -96,19 +101,19 @@ def update():
         player.position = (0, -99, 0)
 
     if distance(player, Screamer_trigger_idol) < Screamer_trigger_idol.scale_x:
-        Screamer(40, 5, 0, 90, 10, 'idol.mp4', 'idol.mp3') # x, y, z, rotate_degree, scale, screamer_vid
+        Screamer(x_idol, y_idol + 5, z_idol - 10, 180, 10, 'idol.mp4', 'idol.mp3') # x, y, z, rotate_degree, scale, screamer_vid
         Screamer_trigger_idol.position = (0, 100, 0)
 
     if distance(player, Screamer_trigger_amog) < Screamer_trigger_amog.scale_x:
-        Screamer(40, 5, 20, 90, 10, 'Amog.gif', 'Amog.mp3') # x, y, z, rotate_degree, scale, screamer_vid
+        Screamer(x_amog, y_amog + 5, z_amog - 5, 180, 5, 'Amog.gif', 'Amog.mp3') # x, y, z, rotate_degree, scale, screamer_vid
         Screamer_trigger_amog.position = (0, 100, 0)
 
     if distance(player, Screamer_trigger_hehe) < Screamer_trigger_hehe.scale_x:
-        Screamer(40, 5, 40, 90, 10, 'hehe', 'hehe.mp3') # x, y, z, rotate_degree, scale, screamer_vid
+        Screamer(x_hehe + 10, y_hehe + 5, z_hehe, 90, 10, 'hehe', 'hehe.mp3') # x, y, z, rotate_degree, scale, screamer_vid
         Screamer_trigger_hehe.position = (0, 100, 0)
 
     if distance(player, Screamer_trigger_micro) < Screamer_trigger_micro.scale_x:
-        Screamer(40, 5, 60, 90, 10, 'micro', 'micro.mp3') # x, y, z, rotate_degree, scale, screamer_vid
+        Screamer(x_micro + 5, y_micro + 5, z_micro, 90, 10, 'micro', 'micro.mp3') # x, y, z, rotate_degree, scale, screamer_vid
         Screamer_trigger_micro.position = (0, 100, 0)
 
 
