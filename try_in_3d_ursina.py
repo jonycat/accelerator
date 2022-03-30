@@ -1,6 +1,5 @@
 from ursina import *
-
-
+from ursina.prefabs.first_person_controller import FirstPersonController
 app = Ursina()
 
 
@@ -49,7 +48,10 @@ y = 0
 z = 0
 scale_z = 5
 
-Screamer_trigger = Entity(model="plane",visible=visible_triggers, scale_z=scale_z,position=(x, y, z))
+Screamer_trigger_idol = Entity(model="plane",visible=visible_triggers, scale_z=scale_z,position=(x, y, z))
+Screamer_trigger_amog = Entity(model="plane",visible=visible_triggers, scale_z=scale_z,position=(x, y, z + 20))
+Screamer_trigger_hehe = Entity(model="plane",visible=visible_triggers, scale_z=scale_z,position=(x, y, z + 40))
+Screamer_trigger_micro = Entity(model="plane",visible=visible_triggers, scale_z=scale_z,position=(x, y, z + 60))
 
 
 
@@ -72,10 +74,11 @@ def Test_Screamer():
     Screamer_video= Entity(model='quad', parent=camera.ui, scale= (2,1), texture='video.mp4')
     a = audio.Audio(sound_file_name='sound.mp3', loop=False)
 
-def Screamer(x,y,z):
-    Entity(model='quad', scale= (2,1), texture='video.mp4',position=(x,y,z))
-    a = audio.Audio(sound_file_name='sound.mp3', loop=False)
+def Screamer(x,y,z, rotate, scale, screamer_vid, screamer_sound):
+    Entity(model='quad', scale= (scale), texture=screamer_vid,position=(x,y,z), rotation_y=rotate, loop=False)
+    a = audio.Audio(sound_file_name=screamer_sound, loop=False)
     screamer_time = 2
+
 
 
 screamer_time = 2.3
@@ -88,17 +91,26 @@ map()
 locations()
 
 
-
 def update():
     if distance(player, Trigger_1) < Trigger_1.scale_x:
         player.position = (0, -99, 0)
 
-    if distance(player, Screamer_trigger) < Screamer_trigger.scale_x:
-        Screamer(40, 0, 0)
+    if distance(player, Screamer_trigger_idol) < Screamer_trigger_idol.scale_x:
+        Screamer(40, 5, 0, 90, 10, 'idol.mp4', 'idol.mp3') # x, y, z, rotate_degree, scale, screamer_vid
+        Screamer_trigger_idol.position = (0, 100, 0)
 
-    if distance(player, Trigger_Guys) < Trigger_Guys.scale_x:
-        audio.Audio(sound_file_name='Trigger_where.mp3', loop=False)
-        Trigger_Guys.position = (0, 100, 0)
+    if distance(player, Screamer_trigger_amog) < Screamer_trigger_amog.scale_x:
+        Screamer(40, 5, 20, 90, 10, 'Amog.gif', 'Amog.mp3') # x, y, z, rotate_degree, scale, screamer_vid
+        Screamer_trigger_amog.position = (0, 100, 0)
+
+    if distance(player, Screamer_trigger_hehe) < Screamer_trigger_hehe.scale_x:
+        Screamer(40, 5, 40, 90, 10, 'hehe', 'hehe.mp3') # x, y, z, rotate_degree, scale, screamer_vid
+        Screamer_trigger_hehe.position = (0, 100, 0)
+
+    if distance(player, Screamer_trigger_micro) < Screamer_trigger_micro.scale_x:
+        Screamer(40, 5, 60, 90, 10, 'micro', 'micro.mp3') # x, y, z, rotate_degree, scale, screamer_vid
+        Screamer_trigger_micro.position = (0, 100, 0)
+
 
     if distance(player, enemy) < enemy.scale_x:
         Test_Screamer()
@@ -106,9 +118,8 @@ def update():
 
         invoke(Game_over, delay=screamer_time)
         invoke(Ambient, delay=screamer_time)
-    a = 0
-    if a == 0:
-        print(player.position)
+
+    print(player.position)
 
 
 
