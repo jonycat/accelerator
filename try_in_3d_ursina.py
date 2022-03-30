@@ -1,11 +1,13 @@
 from ursina import *
 from ursina.prefabs.first_person_controller import FirstPersonController
 app = Ursina()
-
+from ursina.shaders import *
+from ursina.lights import PointLight
 
 def map():
     level = load_model('map')
     Entity(model=level, collider=level, collision=True, scale=5, texture='grass')
+
 
 
 
@@ -31,6 +33,12 @@ def locations(): #Create environment
                               texture='grass',
                               position=(0,-89,0),scale=90,
                               rotation_x=180)
+
+    light_position=(0,20,10)
+    Entity(model='sphere',position= light_position,scale=5,shader=lit_with_shadows_shader,color= (0,255,255, 1))
+
+    DirectionalLight(position=light_position, shadows=True)
+
 
 #temporary_enemy
 enemy = Entity(model="bonnie.obj",texture='texture.png', position=(1,.5,3))
