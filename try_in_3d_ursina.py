@@ -4,6 +4,7 @@ app = Ursina()
 from ursina.shaders import *
 from ursina.lights import PointLight
 
+#light
 
 light_position=(0,20,0)
 light_position2=(0,-50,20)
@@ -43,8 +44,17 @@ def locations(): #Create environment
     home_inside_roof = Entity(model='plane',
                               texture='grass',
                               position=(0,-89,0),scale=90,
-                              rotation_x=180,shader=shader_test)
+                              rotation_x=180)
 
+    #-44.74, -192.182, 3.37699
+    location_3  = Entity(model="location_3",
+                         collider="location_3",
+                         collision=True,
+                         texture="location_3",
+                         position=(0,-200,0),
+                         scale=4,
+                         scale_x=5,
+                         shader= shader_test)
 
 
 
@@ -56,7 +66,8 @@ enemy = Entity(model="bonnie.obj",texture='texture.png', position=(1,.5,3),shade
 visible_triggers = True
 
 Trigger_1 = Entity(model="sphere",visible=visible_triggers, scale=10,position=(75,.5,10))
-Trigger_Guys = Entity(model="sphere",visible=visible_triggers, scale_z=5,position=(50,.5,10))
+Trigger_Guys = Entity(model="sphere",visible=visible_triggers,scale=10,position=(50,.5,10))
+Trigger_loc3 = Entity(model="sphere",visible=visible_triggers,scale=10,position=(37.7992, -200.014, 9.35836))
 
 #Trigger_Screamer
 #settings
@@ -96,10 +107,12 @@ def Test_Screamer():
     Screamer_video= Entity(model='quad', parent=camera.ui, scale= (2,1), texture='video.mp4')
     a = audio.Audio(sound_file_name='sound.mp3', loop=False)
 
+
 def Screamer(x,y,z, rotate, scale, screamer_vid, screamer_sound):
-    Entity(model='quad', scale= (scale), texture=screamer_vid,position=(x,y,z), rotation_y=rotate, loop=False)
+    scr = Entity(model='quad', scale= (scale), texture=screamer_vid,position=(x,y,z), rotation_y=rotate, loop=False)
     a = audio.Audio(sound_file_name=screamer_sound, loop=False)
-    screamer_time = 2
+    destroy(scr,3)
+    destroy(a,3)
 
 
 
@@ -113,18 +126,31 @@ Sky()
 map()
 locations()
 
+def amog_coords():
+    x_amog, y_amog, z_amog = -40.885, 0, -0.295287
+
 
 def update():
     if distance(player, Trigger_1) < Trigger_1.scale_x:
         player.position = (0, -99, 0)
 
+    if distance(player,Trigger_Guys) < Trigger_1.scale_x:
+        player.position = (-44.74, -200.182, 3.37699)
+
+    if distance(player,Trigger_loc3) < Trigger_1.scale_x:
+        player.position = (0,0,0)
+
     if distance(player, Screamer_trigger_idol) < Screamer_trigger_idol.scale_x:
         Screamer(x_idol, y_idol + 5, z_idol - 10, 180, 10, 'idol.mp4', 'idol.mp3') # x, y, z, rotate_degree, scale, screamer_vid
         Screamer_trigger_idol.position = (0, 100, 0)
 
+
     if distance(player, Screamer_trigger_amog) < Screamer_trigger_amog.scale_x:
         Screamer(x_amog, y_amog + 5, z_amog - 5, 180, 5, 'amog.mp4', 'Amog.mp3') # x, y, z, rotate_degree, scale, screamer_vid
         Screamer_trigger_amog.position = (0, 100, 0)
+
+
+
 
     if distance(player, Screamer_trigger_hehe) < Screamer_trigger_hehe.scale_x:
         Screamer(x_hehe + 10, y_hehe + 5, z_hehe, 90, 10, 'hehe', 'hehe.mp3') # x, y, z, rotate_degree, scale, screamer_vid
@@ -133,6 +159,8 @@ def update():
     if distance(player, Screamer_trigger_micro) < Screamer_trigger_micro.scale_x:
         Screamer(x_micro + 5, y_micro + 5, z_micro, 90, 10, 'micro', 'micro.mp3') # x, y, z, rotate_degree, scale, screamer_vid
         Screamer_trigger_micro.position = (0, 100, 0)
+
+
 
 
     if distance(player, enemy) < enemy.scale_x:
