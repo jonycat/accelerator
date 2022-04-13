@@ -4,10 +4,21 @@ app = Ursina()
 from ursina.shaders import *
 from ursina.lights import PointLight
 
+
+light_position=(0,20,0)
+light_position2=(0,-50,20)
+Entity(model='sphere',position= light_position,scale=5,shader=lit_with_shadows_shader,color= (0,255,255, 1))
+Entity(model='sphere',position= light_position2,scale=5,shader=lit_with_shadows_shader,color= (0,255,255, 1))
+PointLight(position=light_position, shadows=True)
+PointLight(position=light_position2, shadows=True)
+shader_test = basic_lighting_shader
+
+
+
+
 def map():
     level = load_model('map')
-    Entity(model=level, collider=level, collision=True, scale=5, texture='grass')
-
+    Entity(model=level, collider=level, collision=True, scale=5, texture='grass',shader=shader_test)
 
 
 
@@ -17,7 +28,7 @@ def locations(): #Create environment
                       collision=True,
                       texture='house_outside_texture',
                       position=(100,0,0),scale=1,
-                      rotation_y=180)
+                      rotation_y=180,shader=shader_test)
 
 
     home_inside = Entity(model="house_inside",
@@ -25,29 +36,27 @@ def locations(): #Create environment
                      collision=True,
                      texture='brick',
                      position=(0,-100,-30),
-                     scale=30,
-                     rotation_y=180)
+                     scale=33,
+                     rotation_y=180,shader=shader_test)
 
 
     home_inside_roof = Entity(model='plane',
                               texture='grass',
                               position=(0,-89,0),scale=90,
-                              rotation_x=180)
+                              rotation_x=180,shader=shader_test)
 
-    light_position=(0,20,10)
-    Entity(model='sphere',position= light_position,scale=5,shader=lit_with_shadows_shader,color= (0,255,255, 1))
 
-    DirectionalLight(position=light_position, shadows=True)
+
 
 
 #temporary_enemy
-enemy = Entity(model="bonnie.obj",texture='texture.png', position=(1,.5,3))
+enemy = Entity(model="bonnie.obj",texture='texture.png', position=(1,.5,3),shader=shader_test)
 
 #temporary_Triggers
 visible_triggers = True
 
 Trigger_1 = Entity(model="sphere",visible=visible_triggers, scale=10,position=(75,.5,10))
-Trigger_Guys = Entity(model="plane",visible=visible_triggers, scale_z=5,position=(50,.5,10))
+Trigger_Guys = Entity(model="sphere",visible=visible_triggers, scale_z=5,position=(50,.5,10))
 
 #Trigger_Screamer
 #settings
@@ -56,16 +65,16 @@ y = 0
 z = 0
 scale_z = 5
 
-x_idol, y_idol, z_idol = -25.3238, -98.2, -11.0422
-x_amog, y_amog, z_amog = 29.2416, -98.2, 5.07941
-x_hehe, y_hehe, z_hehe = 11.6294, -98.2, -14.7563
-x_micro, y_micro, z_micro = 11.98, -99, 6.95575
+x_idol, y_idol, z_idol = -27.1282, -98.7348, -8.82384
+x_amog, y_amog, z_amog = 29.0178, -98.02, 11.3805
+x_hehe, y_hehe, z_hehe = 12.0208, -98.02, -12.9324
+x_micro, y_micro, z_micro = 11.4192, -98.02, 10.8022
 
 
-Screamer_trigger_idol = Entity(model="plane",visible=visible_triggers, scale_z=scale_z,position=(x_idol, y_idol, z_idol))
-Screamer_trigger_amog = Entity(model="plane",visible=visible_triggers, scale_z=scale_z,position=(x_amog, y_amog, z_amog))
-Screamer_trigger_hehe = Entity(model="plane",visible=visible_triggers, scale_z=scale_z,position=(x_hehe, y_hehe, z_hehe))
-Screamer_trigger_micro = Entity(model="plane",visible=visible_triggers, scale_z=scale_z,position=(x_micro, y_micro, z_micro))
+Screamer_trigger_idol = Entity(model="sphere",visible=visible_triggers,position=(x_idol, y_idol, z_idol),shader=triplanar_shader,scale=5)
+Screamer_trigger_amog = Entity(model="sphere",visible=visible_triggers,position=(x_amog, y_amog, z_amog),shader=triplanar_shader,scale=5)
+Screamer_trigger_hehe = Entity(model="sphere",visible=visible_triggers,position=(x_hehe, y_hehe, z_hehe),shader=triplanar_shader,scale=5)
+Screamer_trigger_micro = Entity(model="sphere",visible=visible_triggers,position=(x_micro, y_micro, z_micro),shader=triplanar_shader,scale=5)
 
 
 
@@ -94,7 +103,8 @@ def Screamer(x,y,z, rotate, scale, screamer_vid, screamer_sound):
 
 
 
-screamer_time = 2.3
+bunny_screamer_time = 2.3
+screamer_time = 3
 player = FirstPersonController()
 
 player.scale = 3
@@ -113,7 +123,7 @@ def update():
         Screamer_trigger_idol.position = (0, 100, 0)
 
     if distance(player, Screamer_trigger_amog) < Screamer_trigger_amog.scale_x:
-        Screamer(x_amog, y_amog + 5, z_amog - 5, 180, 5, 'Amog.gif', 'Amog.mp3') # x, y, z, rotate_degree, scale, screamer_vid
+        Screamer(x_amog, y_amog + 5, z_amog - 5, 180, 5, 'amog.mp4', 'Amog.mp3') # x, y, z, rotate_degree, scale, screamer_vid
         Screamer_trigger_amog.position = (0, 100, 0)
 
     if distance(player, Screamer_trigger_hehe) < Screamer_trigger_hehe.scale_x:
@@ -129,8 +139,8 @@ def update():
         Test_Screamer()
         player.position=(0, 0, 0)
 
-        invoke(Game_over, delay=screamer_time)
-        invoke(Ambient, delay=screamer_time)
+        invoke(Game_over, delay=bunny_screamer_time)
+        invoke(Ambient, delay=bunny_screamer_time)
 
     print(player.position)
 
