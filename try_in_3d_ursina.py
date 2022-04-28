@@ -3,6 +3,7 @@ from ursina.prefabs.first_person_controller import FirstPersonController
 app = Ursina()
 from ursina.shaders import *
 from ursina.lights import PointLight
+from ursina.raycaster import raycast
 
 #light
 
@@ -59,17 +60,17 @@ def locations(): #Create environment
 
 
 
-#temporary_enemy
-enemy = Entity(model="bonnie.obj",texture='texture.png', position=(1,.5,3),shader=shader_test)
-
-#temporary_Triggers
 visible_triggers = True
+#temporary_enemy
+enemy = Entity(model="bonnie.obj", texture='texture.png', position=(1,.5,30), shader=shader_test)
+enemy.collider = 'box'
 
-Trigger_1 = Entity(model="sphere",visible=visible_triggers, scale=10,position=(75,.5,10))
+
+Trigger_1 = Entity(model="sphere", visible=visible_triggers, scale=10, position=(75, .5, 10))
 Trigger_Guys = Entity(model="sphere",visible=visible_triggers,scale=10,position=(50,.5,10))
 Trigger_loc3 = Entity(model="sphere",visible=visible_triggers,scale=10,position=(37.7992, -200.014, 9.35836))
 
-#Trigger_Screamer
+
 #settings
 x = 30
 y = 0
@@ -88,11 +89,19 @@ Screamer_trigger_hehe = Entity(model="sphere",visible=visible_triggers,position=
 Screamer_trigger_micro = Entity(model="sphere",visible=visible_triggers,position=(x_micro, y_micro, z_micro),shader=triplanar_shader,scale=5)
 
 
+def bonnie_walk(speed, position):
+    enemy.look_at(player)
+    to_player = player.position - enemy.position
+    to_player.y = 0
+    to_player.normalize()
+
+    feet_ray = raycast(enemy.position + Vec3(0, 0.5, 0), to_player, ignore=(enemy,), distance=.5, debug=False)
+    if not feet_ray.hit:
+        enemy.position += to_player * speed
 
 
 def Game_over():
     game_over_screen = Entity(model='quad', parent=camera.ui, scale=(2,1), texture='Menu')
-
 
 
 def Ambient():
@@ -104,8 +113,8 @@ def sky():
 
 
 def Test_Screamer():
-    Screamer_video= Entity(model='quad', parent=camera.ui, scale= (2,1), texture='video.mp4')
-    a = audio.Audio(sound_file_name='sound.mp3', loop=False)
+    Entity(model='quad', parent=camera.ui, scale= (2,1), texture='video.mp4')
+    audio.Audio(sound_file_name='sound.mp3', loop=False)
 
 
 def Screamer(x,y,z, rotate, scale, screamer_vid, screamer_sound):
@@ -126,6 +135,7 @@ Sky()
 map()
 locations()
 
+
 def amog_coords():
     x_amog, y_amog, z_amog = -40.885, 0, -0.295287
 
@@ -144,13 +154,11 @@ def update():
         Screamer(x_idol, y_idol + 5, z_idol - 10, 180, 10, 'idol.mp4', 'idol.mp3') # x, y, z, rotate_degree, scale, screamer_vid
         Screamer_trigger_idol.position = (0, 100, 0)
 
+    bonnie_walk(0.05,(0,0.5,30))
 
     if distance(player, Screamer_trigger_amog) < Screamer_trigger_amog.scale_x:
         Screamer(x_amog, y_amog + 5, z_amog - 5, 180, 5, 'amog.mp4', 'Amog.mp3') # x, y, z, rotate_degree, scale, screamer_vid
         Screamer_trigger_amog.position = (0, 100, 0)
-
-
-
 
     if distance(player, Screamer_trigger_hehe) < Screamer_trigger_hehe.scale_x:
         Screamer(x_hehe + 10, y_hehe + 5, z_hehe, 90, 10, 'hehe', 'hehe.mp3') # x, y, z, rotate_degree, scale, screamer_vid
@@ -165,8 +173,8 @@ def update():
 
     if distance(player, enemy) < enemy.scale_x:
         Test_Screamer()
+        bonnie_walk(0.05, (100, 0, 0))
         player.position=(0, 0, 0)
-
         invoke(Game_over, delay=bunny_screamer_time)
         invoke(Ambient, delay=bunny_screamer_time)
 
