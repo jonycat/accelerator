@@ -2,6 +2,7 @@ from ursina import *
 from ursina.prefabs.first_person_controller import FirstPersonController
 app = Ursina()
 from ursina.shaders import *
+from ursina.shaders import projector_shader
 from ursina.lights import PointLight
 from ursina.raycaster import raycast
 
@@ -9,8 +10,8 @@ from ursina.raycaster import raycast
 
 light_position=(0,20,0)
 light_position2=(0,-50,20)
-Entity(model='sphere',position= light_position,scale=5,shader=lit_with_shadows_shader,color= (0,255,255, 1))
-Entity(model='sphere',position= light_position2,scale=5,shader=lit_with_shadows_shader,color= (0,255,255, 1))
+Entity(model='sphere',position= light_position,scale=5,shader=lit_with_shadows_shader,color= (0,255,255, 0))
+Entity(model='sphere',position= light_position2,scale=5,shader=lit_with_shadows_shader,color= (0,255,255, 0))
 PointLight(position=light_position, shadows=True)
 PointLight(position=light_position2, shadows=True)
 shader_test = basic_lighting_shader
@@ -21,8 +22,7 @@ shader_test = basic_lighting_shader
 def map():
     level = load_model('map')
     Entity(model=level, collider=level, collision=True, scale=5, texture='grass',shader=shader_test)
-
-
+    Entity(model='',  scale=10, position= (0,5,-10))
 
 def locations(): #Create environment
     home_outside = Entity(model="home_outside_model",
@@ -57,15 +57,27 @@ def locations(): #Create environment
                          scale_x=5,
                          shader= shader_test)
 
+    loc4_map = load_model('location_4')
+    location_4 = Entity(model=loc4_map,
+                        collider=loc4_map,
+                        collision=True,
+                        position=(0, -400, 0),
+                        scale=5,
+                        shader=unlit_shader)
 
+#phone model in end
+phone =Entity(model="telefon",
+              texture="phone",
+              rotation_y=-90,
+              position=(-22.0916, -400.1, 5),
+              scale=8)
 
+visible_triggers = False
 
-visible_triggers = True
-
-Trigger_to_loc2 = Entity(model="sphere", visible=visible_triggers, scale=10, position=(75, .5, 10))
-Trigger_to_loc3 = Entity(model="sphere", visible=visible_triggers, scale=10, position=(50, .5, 10))
-Trigget_to_lo4 = Entity(model="cube",texture="box", visible=True, scale=5, position=(50, 20000, 10))
-Trigger_EXIT = Entity(model="sphere", visible=visible_triggers, scale=10, position=(37.7992, -200.014, 9.35836))
+Trigger_to_loc2 = Entity(model="sphere", visible=True,color = (0,230,0,1), scale=5, position=(75, .5, 10))
+Trigger_to_loc3 = Entity(model="sphere", visible=True,color = (0,230,0,1), scale=5, position=(50, -100, 10))
+Trigger_EXIT = Entity(model="sphere", visible=True,color = (0,230,0,1), scale=10, position=(37.7992, -200.014, 6.35836))
+Trigger_END = Entity(model="sphere", visible=visible_triggers, scale=5, position=(-22.0916, -400.207, -0.514469))
 
 
 
@@ -112,16 +124,11 @@ class Enemy(Entity):
 
 
 def Game_over():
-    game_over_screen = Entity(model='quad', parent=camera.ui, scale=(2,1), texture='Menu')
+    game_over_screen = Entity(model='quad', parent=camera.ui, scale=(2,1), texture='game over')
 
-
-def Ambient():
-    ambient = audio.Audio(sound_file_name='Ambient.mp3', loop=True)
-
-def sky():
-    sky_model = Entity(model="quad",rotation_x=270, texture='night_sky', position=(0,100,0), scale=10000)
-
-
+def END():
+    ending_screen = Entity(model='quad', parent=camera.ui, scale=(2, 1), color=(0,0,0,1))
+    audio.Audio(sound_file_name='Hello.mp3', loop=False)
 
 def Test_Screamer():
     Entity(model='quad', parent=camera.ui, scale= (2,1), texture='video.mp4')
@@ -140,7 +147,7 @@ bunny_screamer_time = 2.3
 screamer_time = 3
 player = FirstPersonController()
 player.scale = 3
-player.jump_height = 20
+player.jump_height = 0
 Sky()
 map()
 locations()
@@ -149,6 +156,7 @@ enemy = Enemy(player, False)
 trigger_count = 0
 def Triggers():
     global trigger_count
+    global ringin
     if distance(player, Trigger_to_loc2) < Trigger_to_loc2.scale_x:
         player.position = (0, -99, 0)
 
@@ -192,20 +200,28 @@ def Triggers():
     if distance(player, Trigger_to_loc3) < Trigger_to_loc3.scale_x:
         enemy.enabled = True
         player.position = (-9.59772, -200.018, 10.3979)
-        player.rotation_y = -90
+
 
 
     if distance(player, Trigger_EXIT) < Trigger_to_loc2.scale_x:
-        player.position = (0, 0, 0)
-
-
+        player.position = (-77.7865, -400.207, -0.25065)
+        ringin = audio.Audio(sound_file_name='ringing.mp3', loop=True)
 
     if distance(player, enemy) < enemy.scale_x:
         Test_Screamer()
         enemy.position = (0, -500, 0)
         player.position=(0, 0, 0)
         invoke(Game_over, delay=bunny_screamer_time)
-        invoke(Ambient, delay=bunny_screamer_time)
+        invoke(exit, delay=4)
+
+    if distance (player, Trigger_END) < Trigger_END.scale_x:
+        audio.destroy(ringin)
+        END()
+        player.position = (0,0,0)
+        player.speed = 0
+        invoke(exit, delay=3)
+
+
 
 def update():
     enemy.update()
@@ -214,14 +230,13 @@ def update():
     if distance(player, Trigger_to_loc3) < Trigger_to_loc2.scale_x:
         enemy.enabled = True
         player.position = (-9.59772, -200.018, 10.3979)
-        player.rotation_y = -90
+        player.rotation_y= -90
 
 
-    print(player.position)
 
 
     if held_keys['shift']:
-        player.speed = 20
+        player.speed = 13
     else:
         player.speed = 10
 
