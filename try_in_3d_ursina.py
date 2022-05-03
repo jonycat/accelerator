@@ -2,12 +2,10 @@ from ursina import *
 from ursina.prefabs.first_person_controller import FirstPersonController
 app = Ursina()
 from ursina.shaders import *
-from ursina.shaders import projector_shader
 from ursina.lights import PointLight
 from ursina.raycaster import raycast
 
 #light
-
 light_position=(0,20,0)
 light_position2=(0,-50,20)
 Entity(model='sphere',position= light_position,scale=5,shader=lit_with_shadows_shader,color= (0,255,255, 0))
@@ -164,29 +162,29 @@ def Triggers():
         Screamer(x_idol, y_idol + 5, z_idol - 10, 180, 10, 'idol.mp4', 'idol.mp3') # x, y, z, rotate_degree, scale, screamer_vid
         Screamer_trigger_idol.position = (0, 100, 0)
         trigger_count +=1
-        print(trigger_count)
+
 
     if distance(player, Screamer_trigger_amog) < Screamer_trigger_amog.scale_x:
         Screamer(x_amog, y_amog + 5, z_amog - 5, 180, 5, 'amog.mp4', 'Amog.mp3') # x, y, z, rotate_degree, scale, screamer_vid
         Screamer_trigger_amog.position = (0, 100, 0)
         trigger_count +=1
-        print(trigger_count)
+
 
     if distance(player, Screamer_trigger_hehe) < Screamer_trigger_hehe.scale_x:
         Screamer(x_hehe + 10, y_hehe + 5, z_hehe, 90, 10, 'hehe', 'hehe.mp3') # x, y, z, rotate_degree, scale, screamer_vid
         Screamer_trigger_hehe.position = (0, 100, 0)
         trigger_count +=1
-        print(trigger_count)
+
 
     if distance(player, Screamer_trigger_micro) < Screamer_trigger_micro.scale_x:
         Screamer(x_micro + 5, y_micro + 5, z_micro, 90, 10, 'micro', 'micro.mp3') # x, y, z, rotate_degree, scale, screamer_vid
         Screamer_trigger_micro.position = (0, 100, 0)
         trigger_count +=1
-        print(trigger_count)
+
 
     if trigger_count >= 4:
         trigger_count = -1
-        print(trigger_count)
+
 
     if trigger_count == -1:
         Trigger_to_loc3.position = (1.16471, -99, -20.3294)
