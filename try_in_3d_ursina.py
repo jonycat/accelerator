@@ -5,6 +5,8 @@ from ursina.shaders import *
 from ursina.lights import PointLight
 from ursina.raycaster import raycast
 
+
+
 #light
 light_position=(0,20,0)
 light_position2=(0,-50,20)
@@ -101,7 +103,7 @@ Screamer_trigger_micro = Entity(model="sphere",visible=visible_triggers,position
 
 
 
-#temporary_enemy
+#enemy
 class Enemy(Entity):
     def __init__(self, player, enabled=True):
         super().__init__(model="bonnie.obj", texture='texture.png', shader=shader_test, position=(-44.74, -200.182, 3.37699), collider='box')
@@ -139,6 +141,33 @@ def Screamer(x,y,z, rotate, scale, screamer_vid, screamer_sound):
     destroy(screamer_back,3)
     destroy(scr_audio,3)
 
+#pause
+pause_handler = Entity(ignore_paused=True)
+pause_text = Text('PAUSED', origin=(0,0), scale=2, enabled=False) # Make a Text saying "PAUSED" just to make it clear when it's paused.
+
+
+def pause_handler_input(key):
+    if key == 'escape':
+        application.paused = not application.paused     # Pause/unpause the game.
+        pause_text.enabled = application.paused     # Also toggle "PAUSED" graphic.
+
+pause_handler.input = pause_handler_input       # Assign the input function to the pause handler.
+
+
+
+save_me = Entity(ignore_paused=True)
+save_text = Text('Saved', origin=(0,0), scale=2, enabled=False)
+
+def save(key):
+    global pp
+    if key == 'left arrow':
+        pp = player.position
+    if key == 'right arrow':
+        player.position = pp
+    if key == 'up arrow':
+        pp = [0, 0, 0]
+
+save_me.input = save
 
 
 bunny_screamer_time = 2.3
@@ -224,6 +253,8 @@ def Triggers():
 def update():
     enemy.update()
     Triggers()
+    pause_handler_input(key='')
+    save(key='')
 
     if distance(player, Trigger_to_loc3) < Trigger_to_loc2.scale_x:
         enemy.enabled = True
