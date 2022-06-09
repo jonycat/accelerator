@@ -156,16 +156,37 @@ pause_handler.input = pause_handler_input       # Assign the input function to t
 
 
 save_me = Entity(ignore_paused=True)
-save_text = Text('Saved', origin=(0,0), scale=2, enabled=False)
 
 def save(key):
     global pp
+
     if key == 'left arrow':
-        pp = player.position
+        pp = str(player.position)
+
+        with open('save_file.txt', 'w') as file_save:
+
+            file_save.write(pp[5:-1])
+            file_save.close()
+
+            print('saved')
+
     if key == 'right arrow':
-        player.position = pp
+        with open('save_file.txt', 'r') as file_load:
+            pp_load = file_load.read()
+        print1 = pp_load.split(",") #['0','0','0']
+
+        a = [float(i) for i in print1]
+        x, y, z = a[0], a[1], a[2]
+        player.position = x,y,z
+
+
     if key == 'up arrow':
-        pp = [0, 0, 0]
+        pp = (0, 0, 0)
+        with open('save_file.txt', 'w') as file_delete:
+            file_delete.write(str(pp)[1:-1])
+            file_delete.close()
+            print('save deleted')
+
 
 save_me.input = save
 
